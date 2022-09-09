@@ -1,20 +1,35 @@
-<!-- SET-UP -->
+SET-UP 
+
 cd Desktop
+
 $ rails new wildlife-api -d postgresql -T
+
 $ cd wildlife-api
+
 $ rails db:create
+
 % Add the remote from GitHub
 git remote add origin https://github.com/learn-academy-2022-echo/wildlife-tracker-CathrineC.git
+
 % Create the main branch
 git add .
+
 % Make an initial commit
+
 git commit -m "initial commit"
+
 rails s
+
 git push origin main
+
 git branch
+
 git checkout -b animal-crud-actions
+
 bundle add rspec-rails
+
 rails generate rspec:install
+
 code .
 
 % Wildlife Tracker Challenge
