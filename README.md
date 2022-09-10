@@ -1,72 +1,66 @@
 # SET-UP 
 
-cd Desktop
+    cd Desktop
+    rails new wildlife-api -d postgresql -T
+    cd wildlife-api
+    rails db:create
 
-$ rails new wildlife-api -d postgresql -T
+#### Add the remote from GitHub
 
-$ cd wildlife-api
+    git remote add origin https://github.com/learn-academy-2022-echo/wildlife-tracker-CathrineC.git
 
-$ rails db:create
+#### Create the main branch
 
-Add the remote from GitHub
-git remote add origin https://github.com/learn-academy-2022-echo/wildlife-tracker-CathrineC.git
+    git add .
 
-% Create the main branch
-git add .
+#### Make an initial commit
 
-% Make an initial commit
+    git commit -m "initial commit"
 
-git commit -m "initial commit"
+    rails s
+    git push origin main
+    git branch
+    git checkout -b animal-crud-actions
+    bundle add rspec-rails
+    rails generate rspec:install
+    code .
 
-rails s
+### Wildlife Tracker Challenge
 
-git push origin main
+##### The Forest Service is considering a proposal to place in conservancy a forest of virgin Douglas fir just outside of Portland, Oregon. Before they give the go ahead, they need to do an environmental impact study. They've asked you to build an API the rangers can use to report wildlife sightings.
 
-git branch
 
-git checkout -b animal-crud-actions
+### Story 1: In order to track wildlife sightings, as a user of the API, I need to manage animals.
 
-bundle add rspec-rails
+#### Branch: animal-crud-actions >> terminal >>
 
-rails generate rspec:install
+    it checkout -b animal-crud-actions
 
-code .
+## Acceptance Criteria
 
-% Wildlife Tracker Challenge
+### Create a resource for animal with the following information: common name and scientific binomial
 
-% The Forest Service is considering a proposal to place in conservancy a forest of virgin Douglas fir just outside of Portland, Oregon. Before they give the go ahead, they need to do an environmental impact study. They've asked you to build an API the rangers can use to report wildlife sightings.
+#### terminal >>
 
-%<--------------------------- STORY 1 ----------->
-% Story 1: In order to track wildlife sightings, as a user of the API, I need to manage animals.
+    rails g resource Animal 
+    common_name:string scientific_binomial:string
 
-% Branch: animal-crud-actions >> terminal >>
-git checkout -b animal-crud-actions
+#### to see all available routes >> terminal >>
+    
+    rails routes
 
-% Acceptance Criteria
+#### migrate database (shows in schema.rb) >> terminal >>
 
-% Create a resource for animal with the following information: common name and scientific binomial
-% >> terminal >>
-rails g resource Animal 
-common_name:string scientific_binomial:string
+    rails db:migrate
 
-% to see all available routes >> terminal >>
-rails routes
+#### add item in the database >> terminal >>
+    rails c
 
-% migrate database (shows in schema.rb) >> terminal >>
-rails db:migrate
+    Animal.create common_name:'Animal1', scientific_binomial:'animal1 binomial'
 
-% add item in the database >> terminal >>
-rails c
-
-Animal.create common_name:'Animal1', scientific_binomial:'animal1 binomial'
-
-class AnimalsController < ApplicationController
-
-% Can see the data response of all the animals
-
-% POSTMAN: animals GET /animals(.:format) animals#index
-
-% class AnimalsController < ApplicationController
+### Can see the data response of all the animals
+#### POSTMAN: animals GET /animals(.:format) animals#index
+#### class AnimalsController < ApplicationController
 
     def index
     animals = Animal.all
@@ -78,9 +72,8 @@ class AnimalsController < ApplicationController
     render json: animal
     end
 
-% Can create a new animal in the database
-
-% class AnimalsController < ApplicationController
+### Can create a new animal in the database
+#### class AnimalsController < ApplicationController
 
     def create
         animal = Animal.create(animal_params)
@@ -96,9 +89,8 @@ class AnimalsController < ApplicationController
             params.require(:animal).permit(:common_name,:scientific_binomial)
         end
 
-% POSTMAN: POST   /animals(.:format) animals#create
-
-% POSTMAN: body >> raw >> JSON
+#### POSTMAN: POST   /animals(.:format) animals#create
+#### POSTMAN: body >> raw >> JSON
 
     {
     "animal": {
@@ -107,15 +99,14 @@ class AnimalsController < ApplicationController
     }
     }
 
-% 422Unprocessable Entity >> add in ApplicationController < ActionController::Base
+#### 422 Unprocessable Entity >> add in ApplicationController < ActionController::Base
 
     class ApplicationController < ActionController::Base
     skip_before_action :verify_authenticity_token
     end
 
-% Can update an existing animal in the database
-
-% class AnimalsController < ApplicationController
+### Can update an existing animal in the database
+#### class AnimalsController < ApplicationController
 
     def create
         animal = Animal.create(animal_params)
@@ -131,11 +122,11 @@ class AnimalsController < ApplicationController
             params.require(:animal).permit(:common_name,:scientific_binomial)
         end
 
-% POSTMAN: PATCH  /animals/:id(.:format)animals#update
+#### POSTMAN: PATCH  /animals/:id(.:format)animals#update
 
-% Can remove an animal entry in the database
+### Can remove an animal entry in the database
 
-% class AnimalsController < ApplicationController
+#### class AnimalsController < ApplicationController
 
    def destroy
         animal = Animal.find(params[:id])
@@ -146,39 +137,42 @@ class AnimalsController < ApplicationController
         end
    end
 
-% POSTMAN: DELETE /animals/:id(.:format)animals#destroy
+#### POSTMAN: DELETE /animals/:id(.:format)animals#destroy
 
 
-%<--------------------------- STORY 2 ----------->
-% Story 2: In order to track wildlife sightings, as a user of the API, I need to manage animal sightings.
+### Story 2: In order to track wildlife sightings, as a user of the API, I need to manage animal sightings.
 
-% Branch: sighting-crud-actions >> terminal >>
-git checkout -b sighting-crud-actions
+#### Branch: sighting-crud-actions >> terminal >>
 
-% Acceptance Criteria
+    git checkout -b sighting-crud-actions
 
-% Create a resource for animal sightings with the following information: latitude, longitude, date. Hint: An animal has_many sightings (rails g resource Sighting animal_id:integer ...).Hint: Date is written in Active Record as yyyy-mm-dd (“2022-07-28")
+### Acceptance Criteria
 
-% >> terminal >>
-rails g resource Sighting animal_id:integer latitude:float longitude:float date
-:date
+### Create a resource for animal sightings with the following information: latitude, longitude, date. Hint: An animal has_many sightings (rails g resource Sighting animal_id:integer ...).Hint: Date is written in Active Record as yyyy-mm-dd (“2022-07-28")
 
-% migrate database (shows in schema.rb) >> terminal >>
-rails db:migrate
+#### >> terminal >>
 
-% to see all available routes >> terminal >>
-rails routes
+    rails g resource Sighting animal_id:integer latitude:float longitude:float date
+    :date
 
-% add item in the database >> terminal >>
+#### migrate database (shows in schema.rb) >> terminal >>
 
-rails c
+    ails db:migrate
 
-Sighting.create animal_id:1, latitude:38.8951, longitude:-77.0364, date:211231 
-% date data type format: YYYYMMDD
+#### to see all available routes >> terminal >>
+    
+    rails routes
 
-% Can create a new animal sighting in the database
+#### add item in the database >> terminal >>
 
-% SightingsController < ApplicationController
+    rails c
+
+    Sighting.create animal_id:1, latitude:38.8951, longitude:-77.0364, date:211231 
+#### date data type format: YYYYMMDD
+
+### Can create a new animal sighting in the database
+
+#### SightingsController < ApplicationController
 
     def create
         sighting = Sighting.create(sighting_params)
@@ -194,11 +188,11 @@ Sighting.create animal_id:1, latitude:38.8951, longitude:-77.0364, date:211231
         params.require(:sighting).permit(:animal_id, :latitude, :longitude, :date)
     end
 
-% POSTMAN: POST   /sightings(.:format)sightings#create
+#### POSTMAN: POST   /sightings(.:format)sightings#create
 
-% Can update an existing animal sighting in the database
+### Can update an existing animal sighting in the database
 
-% SightingsController < ApplicationController
+#### SightingsController < ApplicationController
 
     def update
         sighting = Sighting.find(params[:id])
@@ -214,11 +208,13 @@ Sighting.create animal_id:1, latitude:38.8951, longitude:-77.0364, date:211231
     def sighting_params
         params.require(:sighting).permit(:animal_id, :latitude, :longitude, :date)
     end
-% POSTMAN: PATCH  /sightings/:id(.:format)sightings#update
 
-% Can remove an animal sighting in the database
+####  POSTMAN: PATCH  /sightings/:id(.:format)sightings#update
 
-% SightingsController < ApplicationController
+### Can remove an animal sighting in the database
+
+#### SightingsController < ApplicationController
+
     def destroy
         sighting = Sighting.find(params[:id])
         if sighting.destroy
@@ -228,38 +224,71 @@ Sighting.create animal_id:1, latitude:38.8951, longitude:-77.0364, date:211231
         end
     end
 
-% POSTMAN: DELETE /sightings/:id(.:format)sightings#destroy
+#### POSTMAN: DELETE /sightings/:id(.:format)sightings#destroy
 
-%<--------------------------- STORY 3 ----------->
-Story 3: In order to see the wildlife sightings, as a user of the API, I need to run reports on animal sightings.
+### Story 3: In order to see the wildlife sightings, as a user of the API, I need to run reports on animal sightings.
 
-Branch: animal-sightings-reports
+#### Branch: animal-sightings-reports >> terminal >>
 
-Acceptance Criteria
+### Acceptance Criteria
 
-Can see one animal with all its associated sightings
-Hint: Checkout this example on how to include associated records
-Can see all the all sightings during a given time period
-Hint: Your controller can use a range to look like this:
-class SightingsController < ApplicationController
-  def index
-    sightings = Sighting.where(date: params[:start_date]..params[:end_date])
-    render json: sightings
-  end
-end
-Hint: Be sure to add the start_date and end_date to what is permitted in your strong parameters method
-Hint: Utilize the params section in Postman to ease the developer experience
-Hint: Routes with params
+#### Can see one animal with all its associated sightings
+#### Hint: Checkout this example on how to include associated records
+
+##### AnimalsController < ApplicationController
+
+    def show
+        animal = Animal.find(params[:id])
+        render json: animal, include:[:sightings]
+    end
+
+##### SightingsController < ApplicationController
+
+    def show
+        sighting = Sighting.find_by(id: params[:id])
+        if sighting
+            render json: sighting.to_json(include: [:animals])
+        else
+            render json: { message: 'There is no sighting for the selected animal.' }
+        end        
+    end
+
+##### sighting.rb
+    class Sighting < ApplicationRecord
+        belongs_to:animal
+    end
+##### animal.rb
+    class Animal < ApplicationRecord
+        has_many:sightings
+    end
+
+#### Can see all the all sightings during a given time period
+<!-- Hint: Your controller can use a range to look like this: -->
+    class SightingsController < ApplicationController
+    def index
+        sightings = Sighting.where(date: params[:start_date]..params[:end_date])
+        render json: sightings
+    end
+    end
+
+<!-- Hint: Be sure to add the start_date and end_date to what is permitted in your strong parameters method -->
+
+    def sighting_params
+        params.require(:sighting).permit(:animal_id, :latitude, :longitude, :start_date, :end_date)
+    end
+
+<!-- Hint: Utilize the params section in Postman to ease the developer experience
+
+Hint: Routes with params -->
 
 
-% Stretch Challenges
+### Stretch Challenges
 
-%<--------------------------- STORY 4 ----------->
-Story 4: In order to see the wildlife sightings contain valid data, as a user of the API, I need to include proper specs.
+### Story 4: In order to see the wildlife sightings contain valid data, as a user of the API, I need to include proper specs.
 
-Branch: animal-sightings-specs
+#### Branch: animal-sightings-specs
 
-Acceptance Criteria
+### Acceptance Criteria
 Validations will require specs in spec/models and the controller methods will require specs in spec/requests.
 
 Can see validation errors if an animal doesn't include a common name and scientific binomial
@@ -269,12 +298,11 @@ Can see a validation error if the animal's common name and scientific binomial a
 Can see a status code of 422 when a post request can not be completed because of validation errors
 Hint: Handling Errors in an API Application the Rails Way
 
-%<--------------------------- STORY 5 ----------->
-Story 5: In order to increase efficiency, as a user of the API, I need to add an animal and a sighting at the same time.
+### Story 5: In order to increase efficiency, as a user of the API, I need to add an animal and a sighting at the same time.
 
-Branch: submit-animal-with-sightings
+#### Branch: submit-animal-with-sightings
 
-Acceptance Criteria
+### Acceptance Criteria
 
-Can create new animal along with sighting data in a single API request
-Hint: Look into accepts_nested_attributes_for
+#### Can create new animal along with sighting data in a single API request
+#### Hint: Look into accepts_nested_attributes_for
