@@ -281,6 +281,11 @@
 
 Hint: Routes with params -->
 
+    Rails.application.routes.draw do
+        resources :sightings
+        resources :animals
+    end
+
 
 ### Stretch Challenges
 
